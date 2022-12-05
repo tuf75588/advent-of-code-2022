@@ -1,4 +1,4 @@
-
+// @ts-ignore
 const text = await Deno.readTextFile("./input.txt");
 const numbers = text.split("\n\n").map((x) => x.split("\n").map(Number));
 const totals: number[] = [];

@@ -1,5 +1,5 @@
 // @ts-ignore
-const input = await Deno.readTextFile("./input.txt");
+const input = await Deno.readTextFile('./input.txt');
 
 //! opponent
 // A is rock
@@ -35,7 +35,7 @@ const moreValues: MoreValues = { X: 1, Y: 2, Z: 3 };
 // write a function to get the game score and move score of a game
 
 function getScore(game: string): number {
-  const [opponentMove, yourMove]: string[] = game.split(" ");
+  const [opponentMove, yourMove]: string[] = game.split(' ');
   const gameScore = gameValues[opponentMove][yourMove];
 
   const moveScore = moreValues[yourMove];
@@ -47,7 +47,42 @@ function add(x: number, y: number) {
   return x + y;
 }
 
-const games = input.split("\n");
+const games = input.split('\n');
 const scores = games.map(getScore).reduce(add);
 
-console.log(scores);
+/* 
+PART 2
+*/
+
+/* 
+X is lose
+Y is draw
+Z is win
+*/
+
+const requiredMoves = {
+  A: { X: 'S', Y: 'R', Z: 'P' },
+  B: { X: 'R', Y: 'P', Z: 'S' },
+  C: { X: 'P', Y: 'S', Z: 'R' },
+};
+
+const actualMoveValues = { R: 1, P: 2, S: 3 };
+const actualGameValues = { X: 0, Y: 3, Z: 6 };
+
+function getActualScore(game) {
+  const [opponentMove, gameOutcome] = game.split(' ');
+
+  const yourMove = requiredMoves[opponentMove][gameOutcome];
+
+  const gameScore = actualGameValues[gameOutcome];
+
+  const moveScore = actualMoveValues[yourMove];
+
+  return gameScore + moveScore;
+
+}
+
+
+const actualGames = input.split('\n');
+const actualScores = games.map(getActualScore).reduce(add);
+console.log(actualScores);
