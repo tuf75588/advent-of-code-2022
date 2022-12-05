@@ -11,19 +11,31 @@ const input = await Deno.readTextFile("./input.txt");
 // Y is paper
 // Z is scissors
 
-const gameValues = {
+interface GameValues {
+  A: { X: number; Y: number; Z: number };
+  B: { X: number; Y: number; Z: number };
+  C: { X: number; Y: number; Z: number };
+}
+
+type MoreValues = {
+  X: number;
+  Y: number;
+  Z: number;
+};
+
+const gameValues: GameValues = {
   A: { X: 3, Y: 6, Z: 0 },
   B: { X: 0, Y: 3, Z: 6 },
   C: { X: 6, Y: 0, Z: 3 },
 };
 
 // break up scores by newline into an array
-const moreValues = { X: 1, Y: 2, Z: 3 };
+const moreValues: MoreValues = { X: 1, Y: 2, Z: 3 };
 
 // write a function to get the game score and move score of a game
 
-function getScore(game) {
-  const [opponentMove, yourMove] = game.split(" ");
+function getScore(game: string): number {
+  const [opponentMove, yourMove]: string[] = game.split(" ");
   const gameScore = gameValues[opponentMove][yourMove];
 
   const moveScore = moreValues[yourMove];
@@ -31,7 +43,7 @@ function getScore(game) {
   return gameScore + moveScore;
 }
 
-function add(x, y) {
+function add(x: number, y: number) {
   return x + y;
 }
 
