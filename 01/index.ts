@@ -7,8 +7,11 @@ for (const [index, _] of numbers.entries()) {
   totals.push(sums);
 }
 const topAmount = Math.max(...totals);
-const topThree = totals.sort((a, b) => {
-  return b - a;
-}).slice(0,3).reduce((a,b) => a + b);
+const topThree = totals
+  .sort((a, b) => {
+    return b - a;
+  })
+  .slice(0, 3)
+  .reduce((a, b) => a + b);
 
-console.log(topThree)
+console.log(topThree);
