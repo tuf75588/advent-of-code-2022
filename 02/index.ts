@@ -22,9 +22,6 @@ const moreValues = { X: 1, Y: 2, Z: 3 };
 
 // write a function to get the game score and move score of a game
 
-
-
-
 function getScore(game) {
   const [opponentMove, yourMove] = game.split(" ");
   const gameScore = gameValues[opponentMove][yourMove];
@@ -34,13 +31,11 @@ function getScore(game) {
   return gameScore + moveScore;
 }
 
-
-function add(x,y) {
+function add(x, y) {
   return x + y;
 }
 
 const games = input.split("\n");
 const scores = games.map(getScore).reduce(add);
 
-
-console.log(scores)
+console.log(scores);
