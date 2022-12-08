@@ -16,17 +16,15 @@ function findCommonItems(rucksack) {
   const firstHalfSet = new Set(firstHalf);
   const commonItem = [...secondHalf].find((item) => firstHalfSet.has(item));
   return commonItem;
-
 }
 
 // assign each common character a priority code
 function getItemPriorityCode(item: string) {
-  return item.charCodeAt(0) >= 65 ? item.charCodeAt(0) - 96 : item.charCodeAt(0) - 38;
+  return item.charCodeAt(0) - (/[a-z]/.test(item) ? 96 : 38);
 }
 
-
-
-// find which characters of the second half are also in the first half
-console.log(getItemPriorityCode(findCommonItems(sampleInput)))
-
-
+const commonItems = rucksacks
+  .map(findCommonItems)
+  .map(getItemPriorityCode)
+  .reduce((a, b) => a + b, 0);
+console.log(commonItems); //7875
