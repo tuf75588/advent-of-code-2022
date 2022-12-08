@@ -37,13 +37,28 @@ console.log(commonItems); //7875
 */
 
 function findGroupsOfThree(array) {
-  return array.length ? [array.slice(0,3), ...findGroupsOfThree(array.slice(3))] : [];
+  return array.length
+    ? [array.slice(0, 3), ...findGroupsOfThree(array.slice(3))]
+    : [];
 }
 
-console.log(findGroupsOfThree(rucksacks))
+function findCommonItemsInGroupsOfThree(group) {
+  const [firstGroup, secondGroup, thirdGroup] = [group[0], group[1], group[2]];
+  const [set1, set2] = [new Set(firstGroup), new Set(secondGroup)];
+  const commonItem = [...thirdGroup].find(
+    (item) => set1.has(item) && set2.has(item)
+  );
+  return commonItem;
+}
+
+const threeLines = findGroupsOfThree(rucksacks);
+const commonByThirds = threeLines
+  .map(findCommonItemsInGroupsOfThree)
+  .map(getItemPriorityCode)
+  .reduce((a, b) => a + b, 0);
+console.log(commonByThirds);
 
 // const everyThree = rucksacks
 //   .map(findGroupsOfThree)
 //   .map(getItemPriorityCode)
 //   .reduce((a, b) => a + b, 0);
-
