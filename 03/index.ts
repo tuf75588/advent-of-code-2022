@@ -28,3 +28,22 @@ const commonItems = rucksacks
   .map(getItemPriorityCode)
   .reduce((a, b) => a + b, 0);
 console.log(commonItems); //7875
+
+// part 2
+
+/* 
+ divide the rucksacks into groups of 3
+ find the common item for each group of 3
+*/
+
+function findGroupsOfThree(array) {
+  return array.length ? [array.slice(0,3), ...findGroupsOfThree(array.slice(3))] : [];
+}
+
+console.log(findGroupsOfThree(rucksacks))
+
+// const everyThree = rucksacks
+//   .map(findGroupsOfThree)
+//   .map(getItemPriorityCode)
+//   .reduce((a, b) => a + b, 0);
+
