@@ -27,8 +27,6 @@ const commonItems = rucksacks
   .map(findCommonItems)
   .map(getItemPriorityCode)
   .reduce((a, b) => a + b, 0);
-console.log(commonItems); //7875
-
 // part 2
 
 /* 
@@ -56,7 +54,7 @@ const commonByThirds = threeLines
   .map(findCommonItemsInGroupsOfThree)
   .map(getItemPriorityCode)
   .reduce((a, b) => a + b, 0);
-console.log(commonByThirds);
+
 
 // const everyThree = rucksacks
 //   .map(findGroupsOfThree)
