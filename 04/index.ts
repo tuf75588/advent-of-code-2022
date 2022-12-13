@@ -1,8 +1,6 @@
 // @ts-ignore
 const input = await Deno.readTextFile('./input.txt');
 
-
-
 const ranges = input.split('\n');
 
 // find the coordinates of each range
@@ -24,4 +22,13 @@ const checkContaining = ([start1, end1, start2, end2]) =>
 
 const coordinates = ranges.map(parsePersonalPair);
 const containing = coordinates.filter(checkContaining);
-console.log(containing.length);
+
+// PART 2
+
+const checkOverlapping = ([start1, end1, start2, end2]) => {
+  return start1 <= end2 && start2 <= end1;
+};
+
+const overlapping = coordinates.filter(checkOverlapping);
+const overlappingCount = overlapping.length;
+console.log(overlappingCount);
