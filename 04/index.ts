@@ -31,4 +31,3 @@ const checkOverlapping = ([start1, end1, start2, end2]) => {
 
 const overlapping = coordinates.filter(checkOverlapping);
 const overlappingCount = overlapping.length;
-console.log(overlappingCount);

@@ -2,7 +2,7 @@
 const input = await Deno.readTextFile('./input.txt');
 const rucksacks = input.split('\n');
 
-const sampleInput = `vJrwpWtwJgWrhcsFMMfFFhFp`;
+// const sampleInput = `vJrwpWtwJgWrhcsFMMfFFhFp`;
 
 // split them all in two?
 // const types = sampleInput.split('\n').map(splitStringInTwo)
