@@ -82,4 +82,18 @@ const fileTree = lines.reduce(
   { tree: {}, location: [] }
 ).tree;
 
-console.log(fileTree);
+
+
+const sizes = {};
+
+const dfs = (tree, path = '/') => {
+  let size: number = 0;
+  Object.entries(tree).forEach(([name, content]: any) => {
+    size += (typeof content === 'object' ? dfs(content, `${path}${name}/`) : content);
+  })
+  sizes[path] = size;
+  return size;
+}
+
+dfs(fileTree);
+console.log(sizes);
