@@ -22,6 +22,9 @@ $ ls
 5626152 d.ext
 7214296 k`;
 
+// @ts-ignore
+const input = await Deno.readTextFile('./input.txt');
+
 function arrayEquals(arrayOne, arrayTwo) {
   return (
     arrayOne.length === arrayTwo.length &&
@@ -33,7 +36,7 @@ function modifyTree(tree, newKey, newVal, destination, path = []) {
   const newTree = Object.entries(tree).reduce((newTree, [key, value]) => {
     // recursively deep copy
     const nextValue =
-      typeof value === 'object'
+      typeof value === "object"
         ? modifyTree(value, newKey, newVal, destination, [...path, key])
         : value;
     return { ...newTree, [key]: nextValue };
@@ -45,55 +48,69 @@ function modifyTree(tree, newKey, newVal, destination, path = []) {
 
 // split up sample input
 
-const lines = sample.split('\n');
-const fileTree = lines.reduce(
-  ({ tree, location }, line) => {
-    const doNothing = () => ({ tree, location });
-    const closeDirectory = () => ({ tree, location: location.slice(0, -1) });
-    const goToHomeDirectory = () => ({ tree, location: [] });
+const lines = input.split("\n");
+const { sizes } = lines.reduce(
+  ({ sizes, location }, line) => {
+    const doNothing = () => ({ sizes, location });
+
+    const closeDirectory = () => ({ sizes, location: location.slice(0, -1) });
+
+    const goToHomeDirectory = () => ({ sizes, location: [""] });
+
     const openDirectory = (line) => {
       const dir = line.match(/\$ cd (\w+)/)[1];
-      return { tree, location: [...location, dir] };
-    };
-    const createDirectory = (line) => {
-      const dir = line.match(/dir (\w+)/)[1];
-      const nextTree = modifyTree(tree, dir, {}, location);
-      return { tree, nextTree, location };
+      return { sizes, location: [...location, dir] };
     };
 
     const createFile = (line) => {
-      const [size, file] = line.match(/(\d+) (.+)/).slice(1);
-      const nextTree = modifyTree(tree, file, Number(size), location);
-      return { tree: nextTree, location };
+      const size = Number(line.match(/(\d+) .+/)[1]);
+      const { nextSizes } = location.reduce(
+        ({ nextSizes, path }, dir) => {
+          const nextPath = `${path}${dir}/`;
+          return {
+            path: nextPath,
+            nextSizes: {
+              ...nextSizes,
+              [nextPath]: (nextSizes[nextPath] ?? 0) + size,
+            },
+          };
+        },
+        { nextSizes: sizes, path: "" }
+      );
+      return { sizes: nextSizes, location };
     };
 
     const commandMap = [
-      { expression: /\$ ls/, function: doNothing },
       { expression: /\$ cd \.\./, function: closeDirectory },
       { expression: /\$ cd \//, function: goToHomeDirectory },
       { expression: /\$ cd \w+/, function: openDirectory },
-      { expression: /dir \w+/, function: createDirectory },
       { expression: /\d+ .+/, function: createFile },
     ];
 
-    const command = commandMap.find(({expression}) => expression.test(line)).function;
+    const command =
+      commandMap.find(({ expression }) => expression.test(line))?.function ??
+      doNothing;
+
     return command(line);
   },
-  { tree: {}, location: [] }
-).tree;
+  { sizes: {}, location: [""] }
+);
 
 
+// PART 1
+// find all the directories under 100000 and add up their sizes
+const sizeSum = Object.values(sizes)
+  .filter((size) => size <= 1e5)
+  .reduce((sum: number, num: number) => sum + num, 0);
 
-const sizes = {};
+console.log(sizeSum);
 
-const dfs = (tree, path = '/') => {
-  let size: number = 0;
-  Object.entries(tree).forEach(([name, content]: any) => {
-    size += (typeof content === 'object' ? dfs(content, `${path}${name}/`) : content);
-  })
-  sizes[path] = size;
-  return size;
-}
+// PART 2
+// find the smallest directory that would give us 40M of space if we deleted it
+const minDeletionSize: number = sizes["/"] - 4e7;
+const deletionCandidates: Array<any> = Object.values(sizes).filter(
+  (size) => size >= minDeletionSize
+);
+const deletionSize: number = Math.min(...deletionCandidates);
 
-dfs(fileTree);
-console.log(sizes);
+console.log(deletionSize);
