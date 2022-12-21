@@ -52,3 +52,31 @@ const directions = [
   [1, 0],
   [-1, 0],
 ];
+
+const countTrees = (matrix, r, c, dr, dc, base) => {
+  return r + dr in matrix && c + dc in matrix[0]
+    ? matrix[r + dr][c + dc] < base
+      ? 1 + countTrees(matrix, r + dr, c + dc, dr, dc, base)
+      : 1
+    : 0;
+};
+
+// count trees in all 4 directions and multiply the results
+const getScenicScore = (matrix, r, c) =>
+  directions.reduce(
+    (product, [dr, dc]) =>
+      product * countTrees(matrix, r, c, dr, dc, matrix[r][c]),
+    1
+  );
+
+  // check the scenic score for every location and return the largest one
+const bestRowScore = matrix.reduce(
+  (best, row, r, matrix) =>
+    row.reduce((best, _, c) => {
+      const score = getScenicScore(matrix, r, c);
+      return Math.max(best, score);
+    }, best),
+  0
+);
+
+console.log(bestRowScore);
