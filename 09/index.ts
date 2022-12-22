@@ -90,3 +90,7 @@ const countTailPositions = (instructions, tailLength) => {
 // PART 1
 const countOf1TailKnot = countTailPositions(instructions, 1);
 console.log(countOf1TailKnot);
+
+// PART 2
+const countOf9TailKnots = countTailPositions(instructions, 9);
+console.log(countOf9TailKnots);
