@@ -1,4 +1,4 @@
-const ropeInput = await Deno.readTextFile("./input.txt");
+
 
 // @ts-ignore
 const directions = {
@@ -9,7 +9,7 @@ const directions = {
 };
 
 // @ts-ignore
-const coordsToHash = (r, c) => r * 1e5 + c;
+const coordsToHash = (r: any, c: any) => r * 1e5 + c;
 
 const movePoint = (point, direction) => {
   const nextPoint = point.map((component, i) => component + direction[i]);
@@ -25,7 +25,7 @@ const followPoint = (leadingPoint, followingPoint) => {
 
   const direction = pointDiff.map((component) => {
     const sign = Math.sign(component);
-    return component ? sign * (sign * component - 1) : 0;
+    return component ? sign * (Math.abs(component) - 1) : 0;
   });
 
   const nextPoint = direction.some((component) => component)
@@ -34,3 +34,59 @@ const followPoint = (leadingPoint, followingPoint) => {
 
   return nextPoint;
 };
+
+const updatePoints = (n, direction, { headPoint, tailPoints, tailSet }) => {
+  const nextHeadPoint = movePoint(headPoint, direction);
+  const { nextTailPoints } = tailPoints.reduce(
+    ({ nextTailPoints, lastPoint }, tailPoint) => {
+      const nextTailPoint = followPoint(lastPoint, tailPoint);
+      return {
+        nextTailPoints: [...nextTailPoints, nextTailPoint],
+        lastPoint: nextTailPoint,
+      };
+    },
+    { nextTailPoints: [], lastPoint: nextHeadPoint }
+  );
+  const nextTailSet = new Set([
+    ...tailSet,
+    coordsToHash(...nextTailPoints[nextTailPoints.length - 1]),
+  ]);
+  const results = {
+    headPoint: nextHeadPoint,
+    tailPoints: nextTailPoints,
+    tailSet: nextTailSet,
+  };
+  return n > 1 ? updatePoints(n - 1, direction, results) : results;
+};
+
+
+
+const ropeInput = await Deno.readTextFile("./input.txt");
+const instructions = ropeInput.split('\n');
+// follow the instructions and count the unique locations of the last tail knot
+const countTailPositions = (instructions, tailLength) => {
+  const { tailSet } = instructions.reduce(
+    ({ tailSet, headPoint, tailPoints }, instruction) => {
+      const [dir, steps] = instruction.split(" ");
+      const direction = directions[dir];
+      const numSteps = Number(steps);
+
+      return updatePoints(numSteps, direction, {
+        headPoint,
+        tailPoints,
+        tailSet,
+      });
+    },
+    {
+      tailSet: new Set(),
+      headPoint: [0, 0],
+      tailPoints: Array.from({ length: tailLength }, () => [0, 0]),
+    }
+  );
+
+  return tailSet.size;
+};
+
+// PART 1
+const countOf1TailKnot = countTailPositions(instructions, 1);
+console.log(countOf1TailKnot);
