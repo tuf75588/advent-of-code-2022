@@ -1,3 +1,4 @@
+const puzzleInput = await Deno.readTextFile('./input.txt');
 const instructions = puzzleInput.split("\n");
 const addRegexp = /addx (-?\d+)/;
 
