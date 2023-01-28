@@ -1,4 +1,3 @@
-const puzzleInput = await Deno.readTextFile('./input.txt');
 const instructions = puzzleInput.split("\n");
 const addRegexp = /addx (-?\d+)/;
 
@@ -20,7 +19,6 @@ const { sum: signalSum } = movements.reduce(
   { sum: 0, x: 1 }
 );
 
-console.log(signalSum);
 
 // PART 2
 const { screen } = movements.reduce(
@@ -36,4 +34,3 @@ const { screen } = movements.reduce(
   { screen: Array(6).fill(""), x: 1 }
 );
 
-console.log(screen);
