@@ -1,7 +1,7 @@
 // @ts-ignore
 const input = await Deno.readTextFile("./input.txt");
 
-// a function to generate coordinates to a hash
+
 // @ts-ignore
 function coordsToHash(x, y) {
   return 1e5 * x + y;
