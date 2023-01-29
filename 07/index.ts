@@ -97,16 +97,14 @@ const { sizes } = lines.reduce(
 );
 
 
-// PART 1
-// find all the directories under 100000 and add up their sizes
+
 const sizeSum = Object.values(sizes)
   .filter((size) => size <= 1e5)
   .reduce((sum: number, num: number) => sum + num, 0);
 
 console.log(sizeSum);
 
-// PART 2
-// find the smallest directory that would give us 40M of space if we deleted it
+
 const minDeletionSize: number = sizes["/"] - 4e7;
 const deletionCandidates: Array<any> = Object.values(sizes).filter(
   (size) => size >= minDeletionSize
